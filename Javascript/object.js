@@ -94,8 +94,8 @@ function letsLearnScope() {
   console.log(rectangle) // {length: 20, width: 20}
   
   const person = {
-    firstName: 'Asabeneh',
-    lastName: 'Yetayeh',
+    firstName: 'Mujeeb',
+    lastName: 'Abdul',
     age: 250,
     country: 'Finland',
     city: 'Helsinki',
@@ -115,8 +115,8 @@ function letsLearnScope() {
 
   // using values
   const person = {
-    firstName: 'Asabeneh',
-    lastName: 'Yetayeh',
+    firstName: 'Abdul',
+    lastName: 'Mujeeb',
     age: 250,
     country: 'Finland',
     city: 'Helsinki',
@@ -154,8 +154,8 @@ function letsLearnScope() {
 
 // object methods
   const person = {
-    firstName: 'Asabeneh',
-    lastName: 'Yetayeh',
+    firstName: 'Mujeeb',
+    lastName: 'Abdul',
     age: 250,
     country: 'Finland',
     city: 'Helsinki',
@@ -175,7 +175,7 @@ function letsLearnScope() {
   }
   
   console.log(person.getFullName())
-  // Asabeneh Yetayeh
+  // Mujeeb Abdul
 
 
 
