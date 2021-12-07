@@ -1,0 +1,20 @@
+[
+    {
+        "Name": "Maris",
+        "Age": 54,
+        "Id": true,
+        "work": "ment"
+    },
+    {
+        "Name": "ayasa",
+        "Age": 43,
+        "Id":false,
+        "work": "Production"
+    },
+    {
+        "work": "Technic",
+        "Id": 65,
+        "Age": "exist",
+        "Name": "undefined"
+    }
+]
