@@ -122,129 +122,89 @@ tr:nth-child(even) {
                   document.getElementById('file_info').innerHTML = "<p>File Name: "+file.name + " | "+file.size+" Bytes.</p>"
               }
           }
+        class TableCsv {
+  /**
+   * @param {HTMLTableElement} root The table element which will display the CSV data.
+   */
+  constructor(root) {
+    this.root = root;
+  }
 
-      function handleFileSelect (){
-          let file = document.getElementById("the_file").files[0];
-          let reader = new FileReader();
-          let link_reg = /(http:\/\/|https:\/\/)/i;
-          reader.onload = function(file) {
-              let content = file.target.result;
-              let rows = file.target.result.split(/[\r\n|\n]+/);
-              let table = document.createElement('table');
+  /**
+   * Clears existing data in the table and replaces it with new data.
+   *
+   * @param {string[][]} data A 2D array of data to be used as the table body
+   * @param {string[]} headerColumns List of headings to be used
+   */
+  update(data, headerColumns = []) {
+    this.clear();
+    this.setHeader(headerColumns);
+    this.setBody(data);
+  }
 
-              let output = "";
+  /**
+   * Clears all contents of the table (incl. the header).
+   */
+  clear() {
+    this.root.innerHTML = "";
+  }
 
-              for(let i = 0; i < rows.length; i++){
-                  let tr = document.createElement('tr');
-                  let arr = rows[i].split(',');
+  /**
+   * Sets the table header.
+   *
+   * @param {string[]} headerColumns List of headings to be used
+   */
+  setHeader(headerColumns) {
+    this.root.insertAdjacentHTML(
+      "afterbegin",
+      `
+            <thead>
+                <tr>
+                    ${headerColumns.map((text) => `<th>${text}</th>`).join("")}
+                </tr>
+            </thead>
+        `
+    );
+  }
 
-                  for (let j = 0; j < arr.length; j++) {
-                      if (i==0){
-                          var td = document.createElement('th');
-                      } else {
-                          var td = document.createElement('td');
-                      }
-                      if( link_reg.test(arr[j])){
-                          let a = document.createElement('a');
-                          a.href = arr[j];
-                          a.innerHTML = arr[j];
-                          td.appendChild(a);
-                      } else {
-                          td.innerHTML = arr[j];
-                      }
-                      tr.appendChild(td);
-                  }
-                  table.appendChild(tr);
-                }
-                document.getElementById('list').appendChild(table);
-          }
-          reader.readAsText(file);
-      }
-      document.getElementById('the_form').addEventListener('submit', handleFileSelect, false);
-      document.getElementById('the_file').addEventListener('change', fileInfo, false);
-//         class TableCsv {
-//   /**
-//    * @param {HTMLTableElement} root The table element which will display the CSV data.
-//    */
-//   constructor(root) {
-//     this.root = root;
-//   }
+  /**
+   * Sets the table body.
+   *
+   * @param {string[][]} data A 2D array of data to be used as the table body
+   */
+  setBody(data) {
+    const rowsHtml = data.map((row) => {
+      return `
+                <tr>
+                    ${row.map((text) => `<td>${text}</td>`).join("")}
+                </tr>
+            `;
+    });
 
-//   /**
-//    * Clears existing data in the table and replaces it with new data.
-//    *
-//    * @param {string[][]} data A 2D array of data to be used as the table body
-//    * @param {string[]} headerColumns List of headings to be used
-//    */
-//   update(data, headerColumns = []) {
-//     this.clear();
-//     this.setHeader(headerColumns);
-//     this.setBody(data);
-//   }
+    this.root.insertAdjacentHTML(
+      "beforeend",
+      `
+            <tbody>
+                ${rowsHtml.join("")}
+            </tbody>
+        `
+    );
+  }
+}
 
-//   /**
-//    * Clears all contents of the table (incl. the header).
-//    */
-//   clear() {
-//     this.root.innerHTML = "";
-//   }
+const tableRoot = document.querySelector("#csvRoot");
+const csvFileInput = document.querySelector("#csvFileInput");
+const tableCsv = new TableCsv(tableRoot);
 
-//   /**
-//    * Sets the table header.
-//    *
-//    * @param {string[]} headerColumns List of headings to be used
-//    */
-//   setHeader(headerColumns) {
-//     this.root.insertAdjacentHTML(
-//       "afterbegin",
-//       `
-//             <thead>
-//                 <tr>
-//                     ${headerColumns.map((text) => `<th>${text}</th>`).join("")}
-//                 </tr>
-//             </thead>
-//         `
-//     );
-//   }
-
-//   /**
-//    * Sets the table body.
-//    *
-//    * @param {string[][]} data A 2D array of data to be used as the table body
-//    */
-//   setBody(data) {
-//     const rowsHtml = data.map((row) => {
-//       return `
-//                 <tr>
-//                     ${row.map((text) => `<td>${text}</td>`).join("")}
-//                 </tr>
-//             `;
-//     });
-
-//     this.root.insertAdjacentHTML(
-//       "beforeend",
-//       `
-//             <tbody>
-//                 ${rowsHtml.join("")}
-//             </tbody>
-//         `
-//     );
-//   }
-// }
-
-// const tableRoot = document.querySelector("#csvRoot");
-// const csvFileInput = document.querySelector("#csvFileInput");
-// const tableCsv = new TableCsv(tableRoot);
-
-// csvFileInput.addEventListener("change", (e) => {
-//   Papa.parse(csvFileInput.files[0], {
-//     delimiter: ",",
-//     skipEmptyLines: true,
-//     complete: (results) => {
-//       tableCsv.update(results.data.slice(1), results.data[0]);
-//     }
-//   });
-// });
+csvFileInput.addEventListener("change", (e) => {
+  Papa.parse(csvFileInput.files[0], {
+    delimiter: ",",
+    skipEmptyLines: true,
+    complete: (results) => {
+      tableCsv.update(results.data.slice(1), results.data[0]);
+    }
+  });
+});
     </script>
 </body>
 </html>
