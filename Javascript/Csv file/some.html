@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Upload a CSV to create cards on board</p>
+      <form>
+        <input type="file" name="upload" id="fileUpload" />
+        <input type="submit">
+    
+       <hr />
+    <div id="dvCSV">
+      </form>
+    <script>
+   function uploadCSVFile() {  
+      var fileUpload = document.getElementById("file");  
+      var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;  
+      if (regex.test(fileUpload.value.toLowerCase())) {  
+          if (typeof(FileReader) != "undefined") {  
+              var reader = new FileReader();  
+              reader.onload = function(e) {  
+                  var table = document.createElement("table");  
+                  table.border=1;
+                  var rows = e.target.result.split("\n");  
+                  for (var i = 0; i < rows.length; i++) {  
+                      var row = table.insertRow(-1);  
+                      var cells = rows[i].split(",");  
+                      for (var j = 0; j < cells.length; j++) {  
+                          var cell = row.insertCell(-1);  
+                          cell.innerHTML = cells[j];  
+                      }  
+                  }  
+                  var dvCSV = document.getElementById("csvFileTable");  
+                  dvCSV.innerHTML = "";  
+                  dvCSV.appendChild(table);  
+              }  
+              reader.readAsText(fileUpload.files[0]);  
+          } else {  
+              alert("This browser does not support HTML5.");  
+          }  
+      } else {  
+          alert("Please upload a valid CSV file.");  
+      }  
+  } 
+    </script>
+</body>
+</html>
+
+
+/*   JavaScrpt Validations for GADT2.0           */
+var dtCh = "/";
+var minYear = 1900;
+var maxYear = 2100;
+function intOnly(i) {
+	if ((i.value).length > 0) 
+	{
+		i.value = i.value.replace(/[^\d]+/g, "");
+	}
+}
+ 
+
+function floatOnly(i)    
+{
+ if ((i.value).length > 0)    
+           	{
+           	
+           	if( i.value.substring(0, 1)==".")  
+           	{
+           	 i.value = "0";
+           	}
+           	 
+          			if (i.value.replace(/[^.]/g, "").length > 1)  
+          			{
+             i.value = "0";   
+          		 
+            }
+            else
+            {
+                i.value = i.value.replace(".." , ".");
+          		i.value = i.value.replace("..." , ".");
+          		i.value = i.value.replace(/[^0-9\.]/g , "");
+            }
+          		   
+          	}
+          	else
+          	{
+          	i.value = i.value="0";
+          	}
+}
+ 
+
+
+function mobileOnly(i) 
+{
+ 	 if(parseInt(i.value.substring(0,1))<6 || i.value=="9999999999" || i.value=="8888888888" || i.value=="7777777777" || i.value=="6666666666")     
+	   {
+		i.value="";   
+	   }
+	 else   
+		 {
+	if ((i.value).length > 0) 
+	{
+		i.value = i.value.replace(/[^\d]+/g, "");
+	}
+		 }
+}
+
+
+function isValidDate(year, month, day) 
+{
+month=parseInt(month)-1;
+var d = new Date(year, month, day);
+if (d.getFullYear() == year && d.getMonth() == month && d.getDate() == day) 
+{
+return true;
+}
+else
+{
+return false;  
+}
+
+}
+ 
+
+function ValidateDateWithAge(inputText,minage,maxage)
+{
+var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+// Match the date format through regular expression
+if(inputText.value.match(dateformat))
+{
+inputText.focus();
+//Test which seperator is used '/' or '-'
+var opera1 = inputText.value.split('/');
+var opera2 = inputText.value.split('-');
+lopera1 = opera1.length;
+lopera2 = opera2.length;
+// Extract the string into month, date and year
+if (lopera1>1)
+{
+var pdate = inputText.value.split('/');
+}
+else if (lopera2>1)
+{
+var pdate = inputText.value.split('-');
+}
+var dd = parseInt(pdate[0]);
+var mm  = parseInt(pdate[1]);
+var yy = parseInt(pdate[2]);
+// Create list of days of a month [assume there is no leap year by default]
+var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+if (mm==1 || mm>2)
+{
+if (dd>ListofDays[mm-1])
+{
+alert('Invalid date format!');
+return false;
+}
+}
+if (mm==2)
+{
+var lyear = false;
+if ( (!(yy % 4) && yy % 100) || !(yy % 400)) 
+{
+lyear = true;
+}
+if ((lyear==false) && (dd>=29))
+{
+alert('Invalid date format!');
+return false;
+}
+if ((lyear==true) && (dd>29))
+{
+alert('Invalid date format!');
+return false;
+}
+}
+
+var dtDOB = new Date(mm + "/" + dd + "/" + yy);
+var dtCurrent = new Date();
+if ( (dtCurrent.getFullYear() - dtDOB.getFullYear())<minage || (dtCurrent.getFullYear() - dtDOB.getFullYear())>maxage ) {
+	alert("Age must be greater than or equal to "+minage+" and less than or equal to "+maxage);
+	inputText.focus();
+	inputText.value = "";
+    return false;
+}
+
+}
+else
+{
+alert("Invalid date format!");
+inputText.focus();
+inputText.value = "";
+return false;
+}
+}
+
+
+function ValidateDateWithAnotherDate(inputText,anotherdate,compare_with_currentdate_y_n)
+{
+var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+// Match the date format through regular expression
+if(inputText.value.match(dateformat))
+{
+inputText.focus();
+//Test which seperator is used '/' or '-'
+var opera1 = inputText.value.split('/');
+var opera2 = inputText.value.split('-');
+lopera1 = opera1.length;
+lopera2 = opera2.length;
+// Extract the string into month, date and year
+if (lopera1>1)
+{
+var pdate = inputText.value.split('/');
+}
+else if (lopera2>1)  
+{
+var pdate = inputText.value.split('-');
+}
+var dd = parseInt(pdate[0]);
+var mm  = parseInt(pdate[1]);
+var yy = parseInt(pdate[2]);
+// Create list of days of a month [assume there is no leap year by default]
+var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+if (mm==1 || mm>2)
+{
+if (dd>ListofDays[mm-1])
+{
+alert('Invalid date format!');
+return false;
+}
+}
+if (mm==2)
+{
+var lyear = false;
+if ( (!(yy % 4) && yy % 100) || !(yy % 400)) 
+{
+lyear = true;
+}
+if ((lyear==false) && (dd>=29))
+{
+alert('Invalid date format!');
+return false;
+}
+if ((lyear==true) && (dd>29))
+{
+alert('Invalid date format!');
+return false;
+}
+}
+
+var EnteredDate = new Date(mm + "/" + dd + "/" + yy);
+
+
+var opera3 = anotherdate.split('/');
+var opera4 = anotherdate.split('-');
+lopera3 = opera3.length;
+lopera4 = opera4.length;
+// Extract the string into month, date and year
+if (lopera3>1)
+{
+var pdate2 = anotherdate.split('/');
+}
+else if (lopera4>1)
+{
+var pdate2 = anotherdate.split('-');
+}
+var dd2 = parseInt(pdate2[0]);
+var mm2  = parseInt(pdate2[1]);
+var yy2 = parseInt(pdate2[2]);
+
+var CompareDate = new Date(mm2 + "/" + dd2 + "/" + yy2);
+
+var dtCurrent = new Date();
+if ( EnteredDate<CompareDate ) {
+	alert("Date must be greater than or equal to "+anotherdate);
+	inputText.focus();
+	inputText.value = "";
+    return false;
+}
+
+if(compare_with_currentdate_y_n == "Y") {
+	if ( EnteredDate>dtCurrent) {
+		alert("Date must be less than or equal to Today's Date");
+		inputText.focus();
+		inputText.value = "";
+	    return false;
+	}
+}
+
+}
+else
+{
+alert("Invalid date format!");
+inputText.focus();
+inputText.value = "";
+return false;
+}
+}
+
+function buildDate(data,separator) 
+{
+	if (data.value.length==2) 
+	{
+		data.value=data.value+""+separator;
+	} 
+	else if (data.value.length==5) 
+	{
+		data.value=data.value+""+separator;
+	}
+}
+
+function ValidateEmail(inputText)
+{
+var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+if(inputText.value.match(mailformat))
+{
+return true;
+}
+else
+{
+alert("You have entered an invalid email address!");
+inputText.value = "";
+inputText.focus();
+return false;
+}
+}
+
+function ValidateStartEndYear(str,sval,eval,msg) 
+{
+	if(Number(str.value)<sval || Number(str.value)>eval) 
+	{
+		alert(msg);
+		str.value = "";
+		str.focus();
+		return false;
+	}
+}
+
+ 
+function isAlphaKeyaddress(i) 
+{
+	if((i.value).length>0) 
+	{
+		i.value = i.value.replace(/[^\d\d.\w\s\-\/\,]+/g, '');
+		//i.value = i.value.replace(/[\d\d.\d]+/g, ''); 
+	}
+	var str=i.value;
+	//i.value=str.toUpperCase();
+}
+function alphaNumOnly2(i) 
+{
+	if(i.value.length>0) 
+	{
+		i.value = i.value.replace(/[^\da-zA-Z]+/g, ''); 
+	}
+}
+function isAlphaNumberKey(evt) 
+{
+	var charCode = (evt.which) ? evt.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode < 64 || charCode > 90) && (charCode < 97 || charCode > 122))
+    	return false;
+    return true;
+}
+function emailCheck(email) {
+	var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+	//var emailPattern =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	var emailCheck = emailPattern.test(email.value);
+	/*var w = window.open('','','width=100,height=100');
+	w.document.write('Message');
+	w.focus();
+	setTimeout(function() {w.close();}, 5000);*/
+	//if( !emailPattern.test(email.value)) {
+	
+	if(emailCheck) 
+	{
+	} 
+	else
+	{
+   		alert("Enter valid email");
+   		email.value="";
+   		email.focus();
+   	}; 
+}
+function numCharsSpaceOnly()
+{
+	if (event.keyCode >= 97 && event.keyCode <= 122) 
+	{
+		event.keyCode = event.keyCode - 32;
+	}
+	if ((event.keyCode >= 45) && (event.keyCode <= 57) || (event.keyCode >= 65) && (event.keyCode <= 90) || (event.keyCode >= 97) && (event.keyCode <= 122) || (event.keyCode == 13) || (event.keyCode == 32)) 
+	{
+		event.keyCode = event.keyCode;
+	} 
+	else
+	{
+		event.keyCode = 0;
+	}
+}
+function isAlphaKey(i) 
+{
+	if ((i.value).length > 0) 
+	{
+		i.value = i.value.replace(/[^\d\d.\w\s\(\)]+/g, "");
+		i.value = i.value.replace(/[\d\d.\d]+/g, "");
+	}
+	var str = i.value;
+	i.value = str.toUpperCase();
+}
+function intCharactersOnly(i) 
+{
+	if ((i.value).length > 0) 
+	{
+		i.value = i.value.replace(/[^\d\d.\w\s\(\)]+/g, "");
+	}
+	var str = i.value;
+	i.value = str.toUpperCase();
+}
+function checkAlphaNumeric(object) 
+{
+	re = /[A-Z a-z 0-9]/gi;
+	var fieldDescription = object.label;
+	if (object.value.match(/\w/gi).length != object.value.length) 
+	{
+		alert(fieldDescription + " must contain only Alphabets or Digits.");
+		return false;
+	}
+}
+function checkLetters(object) 
+{
+	var fieldDescription = object.label;
+	if (object.value.match(/[A-Za-z .]/gi).length != object.value.length)
+	{
+		alert(fieldDescription + " must contain only Alphabets.");
+		return false;
+	}
+}
+  
+function getSize(vfile) 
+{
+	var fsize;  
+	if (window.ActiveXObject) 
+	{
+			//IE BROWSER
+		var oas = new ActiveXObject("Scripting.FileSystemObject");
+			//alert(oas);
+		var filepath = vfile.value;
+		//	alert(filepath);
+		var thefile = oas.getFile(filepath);
+		fsize = thefile.size;
+			//alert(fsize);
+	} else {
+		if (window.XMLHttpRequest) {
+			//NON - IE BROWSER
+			var fileupload = vfile;
+			if (fileupload.files) {
+				fsize = fileupload.files.item(0).fileSize;
+			}
+		} else {
+		}
+	}
+	return fsize;
+}
+    
+
+function myClick(ids) {
+	  setTimeout(
+	    function() {
+	    document.getElementById("res").value=parseInt(document.getElementById("res").value)+1;
+	    if(parseInt(document.getElementById("res").value)<6){
+	    getAjaxData(ids);
+	    }else{
+	    	alert("Exceeded Maximum Time Please try again ");
+	    	return false;
+	    }
+		
+	    }, 5000);
+	}
+
+
+
+/* created by chalamalasetty satish on 16/09/2020 */
+
+function ajax_msg(msg_type,id,milli_seconds,msg)  
+{
+	//sky blue background
+if(msg_type=="S" || msg_type=="s")
+{
+document.getElementById(""+id+"").style.backgroundColor = "#00c851";  
+$('#'+id).fadeIn().html("<i class='fa fa-check' aria-hidden='true'></i>  "+msg);
+}  
+
+//red background
+else if(msg_type=="F" || msg_type=="f")
+{
+document.getElementById(""+id+"").style.backgroundColor = "#ff4444";
+$('#'+id).fadeIn().html("<i class='fa fa-exclamation-triangle' aria-hidden='true' style='font-size:18px;font-weight:normal;'></i> "+msg);
+}
+
+//green background
+else if(msg_type=="B" || msg_type=="b") 
+{
+document.getElementById(""+id+"").style.backgroundColor = "rgba(3, 169, 244, 1)";
+$('#'+id).fadeIn(1000).html("&#10004;  "+msg);
+}  
+  
+else if(msg_type=="W" || msg_type=="w") 
+{
+document.getElementById(""+id+"").style.backgroundColor = "whitesmoke";
+document.getElementById(""+id+"").style.color = "green";
+$('#'+id).fadeIn(1000).html("&#10004;  "+msg);
+}
+
+
+//yellow  background
+else
+{
+document.getElementById(""+id+"").style.backgroundColor = "#ffbb33";
+$('#'+id).fadeIn().html("<i class='fa fa-info-circle' aria-hidden='true' style='font-size:18px;'></i> "+msg);
+}
+
+//disapering div after specified milli seconds
+setTimeout(function() {$('#'+id).fadeOut("slow");}, milli_seconds ); 
+}
+
+
+
+
+/* created by chalamalasetty satish on 26/09/2020 */  
+
+
+//========================Aadhaar validateVerhoeff Algirtham start==========================
+
+var d = [
+       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+       [1, 2, 3, 4, 0, 6, 7, 8, 9, 5], 
+       [2, 3, 4, 0, 1, 7, 8, 9, 5, 6], 
+       [3, 4, 0, 1, 2, 8, 9, 5, 6, 7], 
+       [4, 0, 1, 2, 3, 9, 5, 6, 7, 8], 
+       [5, 9, 8, 7, 6, 0, 4, 3, 2, 1], 
+       [6, 5, 9, 8, 7, 1, 0, 4, 3, 2], 
+       [7, 6, 5, 9, 8, 2, 1, 0, 4, 3], 
+       [8, 7, 6, 5, 9, 3, 2, 1, 0, 4], 
+       [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+     ]
+
+     // permutation table
+     var p = [
+       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+       [1, 5, 7, 6, 2, 8, 3, 0, 9, 4], 
+       [5, 8, 0, 3, 7, 9, 6, 1, 4, 2], 
+       [8, 9, 1, 6, 0, 4, 3, 5, 2, 7], 
+       [9, 4, 5, 3, 1, 2, 6, 8, 7, 0], 
+       [4, 2, 8, 6, 5, 7, 3, 9, 0, 1], 
+       [2, 7, 9, 3, 8, 0, 6, 4, 1, 5], 
+       [7, 0, 4, 6, 9, 1, 3, 2, 5, 8]
+     ]
+ 
+     // validates Aadhar number received as string
+     function validateVerhoeff(obj) 
+
+     {
+     var aadharNumber=obj.value;
+     if(aadharNumber.length!=12)
+     {
+     alert("Aadhar should be 12 Digit");
+     obj.value="";
+     obj.focus();
+     return false;
+     }
+
+     if(isNaN(aadharNumber))
+     {
+     alert("Aadhaar must be a number");
+     obj.value="";     
+     obj.focus();
+     return false;
+     }
+
+
+       var c = 0;
+       var invertedArray = aadharNumber.split('').map(Number).reverse();
+        var len = invertedArray.length;
+        for (var i = 0; i < len; i++) 
+       {
+     	       c = d[c][p[(i % 8)][invertedArray[i]]];
+       }
+       
+       
+      
+       //return (c === 0);
+     }
+       
+
+
+//========================Aadhaar validateVerhoeff Algirtham end==========================
+
+
+
+function getSelectBox(id)
+{
+	return document.getElementById(""+id+"").options[skillsSelect.selectedIndex].text;
+}
+    
+function checkEmpty(idd)
+{
+var checkFlag=true;
+if(document.forms[0].elements["beanProperties("+idd+")"].value.trim()=="" || document.forms[0].elements["beanProperties("+idd+")"].value.trim()=="0")
+{
+checkFlag=false;
+}
+return checkFlag;    
+}
+                   
+
+function getValue(idd)
+{
+return document.forms[0].elements["beanProperties("+idd+")"].value.trim();       
+}
+
+
+
+
+function encodeString(value)
+{
+	if(value==undefined ||value===undefined  || value.trim()=="")
+		{
+		alert("Please Pass a Value as Parameter in encodeString function");
+		return false;
+		}
+	var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/++[++^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+	var encodedString = Base64.encode("CGC0122222222222");
+	return encodedString;
+	   
+}
+
+
+
+function getText(id)
+ {
+ return	document.forms[0].elements["beanProperties("+id+")"].value;
+ }
+
+ function getSelect(id)
+ {
+ 	return document.getElementById(""+id+"").options[document.getElementById(""+id+"").selectedIndex].text;
+
+ }
+
+
+var check_file_and_preview  = function(event,obj,target,maxSize,minSize)      
+				  {
+				   
+				  var id=obj.id;
+				  var fileName=obj.value;
+					          document.getElementById(""+target+"").style.display="none";
+							   var dots = fileName.split(".");
+							   var fileType = "." + dots[dots.length - 1];
+							   
+							   var fileUpload = document.getElementById(""+id+"");
+				               var size = parseFloat(fileUpload.files[0].size / 1024).toFixed(2);
+
+				           if (fileType.toUpperCase() != '.JPG' && fileType.toUpperCase() != '.JPEG') 
+				           {  
+								 
+									alert(" You can upload only *.jpg/jpeg files only");
+									document.getElementById(""+id+"").value="";
+									document.getElementById(""+id+"").focus();
+									return false;
+						   }
+								//(filesize<maxlength)  &&  (filesize>minlength)
+					  	      else if (size > parseInt(maxSize) || size < parseInt(minSize)) 
+								{
+									  alert("Size of Document  should between "+minSize+" kb and  "+maxSize+" ");
+									document.getElementById(""+id+"").value="";
+									document.getElementById(""+id+"").focus();
+									return false;
+								}
+								 
+						 				else
+								{
+					var output = document.getElementById(""+target+"");
+				    document.getElementById(""+target+"").style.display="";
+				    document.getElementById(""+target+"").style.height = "150px";
+				    document.getElementById(""+target+"").style.width = "150px";
+				    output.src = URL.createObjectURL(event.target.files[0]);
+								}  
+								 }; 
+								 
+								 
+								 
+
+								 /* created by chalamalasetty satish on 26/09/2020 */  
+
+
+								 //========================Aadhaar validateVerhoeff Algirtham start==========================
+
+								 var d = [
+								        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+								        [1, 2, 3, 4, 0, 6, 7, 8, 9, 5], 
+								        [2, 3, 4, 0, 1, 7, 8, 9, 5, 6], 
+								        [3, 4, 0, 1, 2, 8, 9, 5, 6, 7], 
+								        [4, 0, 1, 2, 3, 9, 5, 6, 7, 8], 
+								        [5, 9, 8, 7, 6, 0, 4, 3, 2, 1], 
+								        [6, 5, 9, 8, 7, 1, 0, 4, 3, 2], 
+								        [7, 6, 5, 9, 8, 2, 1, 0, 4, 3], 
+								        [8, 7, 6, 5, 9, 3, 2, 1, 0, 4], 
+								        [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+								      ]
+
+								      // permutation table
+								      var p = [
+								        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+								        [1, 5, 7, 6, 2, 8, 3, 0, 9, 4], 
+								        [5, 8, 0, 3, 7, 9, 6, 1, 4, 2], 
+								        [8, 9, 1, 6, 0, 4, 3, 5, 2, 7], 
+								        [9, 4, 5, 3, 1, 2, 6, 8, 7, 0], 
+								        [4, 2, 8, 6, 5, 7, 3, 9, 0, 1], 
+								        [2, 7, 9, 3, 8, 0, 6, 4, 1, 5], 
+								        [7, 0, 4, 6, 9, 1, 3, 2, 5, 8]
+								      ]
+								  
+								      // validates Aadhar number received as string
+								      function validateVerhoeff(obj) 
+
+								      {
+								      var aadharNumber=obj.value;
+								      if(aadharNumber.length!=12)
+								      {
+								      alert("Aadhar should be 12 Digit");
+								     // obj.value="";
+								      //obj.focus();
+								      return false;
+								      }
+
+								      if(isNaN(aadharNumber))
+								      {
+								      alert("Aadhaar must be a number");
+								      obj.value="";     
+								     // obj.focus();
+								      return false;
+								      }
+
+
+								        var c = 0;
+								        var invertedArray = aadharNumber.split('').map(Number).reverse();
+								         var len = invertedArray.length;
+								         for (var i = 0; i < len; i++) 
+								        {
+								      	       c = d[c][p[(i % 8)][invertedArray[i]]];
+								        }
+								        
+								        
+								       
+								       /* if(!(c === 0))
+								        	{   
+								        	alert("Invalid UID-"+obj.value);
+											obj.value="";
+											 return false;
+								        	}*/
+								         
+								         return (c === 0);  
+								      }
+
+
+<!DOCTYPE html>
+
+
+
+
+
+   
+<head>
+    <title> ::OAMDC:: </title>  
+    <html lang="en">
+        <style>      
+                                       
+                                       tr:nth-child(even) {color: #183f62;}     
+                                       </style>
+                                      
+                                      <script type="text/javascript">
+                                      
+                                        function logout()       
+                                          {
+                                          document.getElementById("modal-dialog").style.width="35%";  
+                                          document.getElementById("cfss_modal_body").innerHTML="<img src='images/small_loading.gif' />";
+                                           document.getElementById("cfss_modal_body").innerHTML="<h4>Do you want to logout?</h4><a href='logout.do'><button class='btn btn btn-danger pull-right' style='margin-left:10px;background-color:#F75D59;border:none;'>Logout <i class='fa fa-power-off' aria-hidden='true'></i></button></a> <button class='btn btn-success pull-right' data-dismiss='modal' style='background-color:#52D017;border:none;'>Stay Connected <i class='fa fa-check' aria-hidden='true'></i></button><br><br>";
+                                           $('#cfss_modal').modal('show');
+                                          } 
+                                           /* 
+                                           window.history.forward();
+                                          function noBack() {
+                                              window.history.forward();
+                                          }
+                                           
+                                      
+                                          if (top != self) 
+                                          {
+                                              top.location.replace(location.href);
+                                          }
+                                       */
+                                          // To disable Right click Function 
+                                      
+                                          var message = "This function is not allowed here.";
+                                          function clickIE4() 
+                                          {
+                                      
+                                              if (event.button == 2) 
+                                              {
+                                                  alert(message);
+                                                  return dist_codefalse;
+                                              }
+                                          }
+                                      
+                                          function clickNS4(e) 
+                                          {
+                                              if (document.layers || document.getElementById && !document.all) 
+                                              {
+                                                  if (e.which == 2 || e.which == 3) 
+                                                  {
+                                                      alert(message);
+                                                      return false;
+                                                  }
+                                              }
+                                          }
+                                      
+                                          if (document.layers) 
+                                          {
+                                              document.captureEvents(Event.MOUSEDOWN);
+                                              document.onmousedown = clickNS4;
+                                          }
+                                      
+                                          else if (document.all && !document.getElementById) 
+                                          {
+                                              document.onmousedown = clickIE4;
+                                          }
+                                      
+                                          document.oncontextmenu = new Function("alert(message);return false;");
+                                      </script>
+                                       <meta http-equiv="X-Frame-Options" content="deny">
+                                      <script type="text/javascript" src="https://oamdc.ap.gov.in:443/js/common-validations.js?version=0.8354408070490381"></script>
+                                      <script type="text/javascript" src="https://oamdc.ap.gov.in:443/js/JSFilter.js"></script>
+                                      <script src="js/jquery.min_3.2.1.js"></script>
+                                       <script src="js/bootstrap.min.js"></script>
+                                      <link href="css/font-awesome.min.css" rel="stylesheet">
+                                      <link rel="stylesheet" href="css/animate.min.css">
+                                      <link href="css/bootstrap.min.css" rel="stylesheet">
+                                      <link href="css/siteLayout.css?version=0.09670678722949122" rel="stylesheet">
+                                      <link rel="stylesheet" href="css/blue.css?version=0.1507210635915195">
+                                           
+                                         
+                                      </head>
+                                           
+                                         
+                                               
+                                           
+                                      <body  style="background-color: white;">
+                                      <input type="text" id="hidden_user_id" value=""/>
+                                      <br><br><br>
+                                       <div id="ajax" class="ajax_msg" style="display: none;"></div>  
+                                       
+                                        
+                                       <div id="fsCycler"></div>
+                                          <!-- onload="noBack()" onpageshow="if (event.persisted) noBack();" onunload="" -->
+                                          <div id="wrapper" >
+                                              <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                                                  <div class="container-fluid">
+                                                      <div class="navbar-header">
+                                                          <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                                          <span class="sr-only">Toggle navigation</span>
+                                                          <span class="icon-bar"></span>  
+                                                          <span class="icon-bar"></span>
+                                                          <span class="icon-bar"></span>
+                                                      </button> -->
+                                                          <div class="navbar-brand">
+                                                              <a id="menu-toggle" href="#" class=" btn-menu toggle"> <i
+                                                                  class="fa fa-bars"></i> </a> <!-- <img src="images/header.png"
+                                                                  class="pull-left" style="margin-top:-5px;" height="35" width="35" /> -->
+                                                                  
+                                                                  <a href="home.do" class="pull-left" style="padding-right:15px;"><i class="fa fa-home" style="color:#fff; "></i></a>
+                                                              <a class="navbar-brand" href="#"
+                                                                  style="margin-top:-16px;color: #ffffff;"> <!-- <img style="width:180px;" src="img/logo.png" alt="logo" style="padding-right:0px;" > --> OAMDC </a>
+                                                          </div>
+                                                      </div>
+                                                      <!-- <div id="navbar" class="collapse navbar-collapse">
+                                                      <ul class="nav navbar-nav">
+                                                          <li class="active"><a href="#">Home</a></li>  
+                                                          <li><a href="#">Home</a></li>
+                                                          <li><a href="#about">About</a></li>
+                                                      </ul>  
+                                                  </div>/.nav-collapse -->  
+                                      
+                                                      <ul class="nav navbar-nav navbar-right visible-lg visible-md">
+                                                          <li> <a >  
+                                                            <span id="loading_login"></span> 
+                                                             <!-- onclick="return getUserDetails();" -->   
+                                                          <span style="font-size:15px;border-radius:0px;margin-bottom: -5px;cursor: pointer;"  >
+                                                                      Welcome:&nbsp;<span style="font-style: italic;">
+                                                                            <div id="txt"></div>
+                                                                   </span> </span>  </a> 
+                                                          </li>   
+                                                            <li class="">  
+                                                            
+                                                            <a href="login.do"style=" background: #fe6b1d;  ">Login</a>
+                                                              
+                                                            </li>
+                                                      </ul>  
+                                                  </div>  
+                                              </nav>
+                                               
+                                      
+                                              
+                                              
+                                              
+                                              <!-- Page content -->
+                                      
+                                              <div id="page-content-wrapper" style="padding:0px;">
+                                                  <div class="page-content">
+                                                      <div class="container-fluid">
+                                                          
+                                                          <div
+                                                              class="col-xs-12 col-sm-12 col-md-12 col-lg-12 visible-xs visible-sm">
+                                                              <span class="label label-success pull-right"
+                                                                  style="font-size:12px; padding:8px;border-radius:0px;">Welcome
+                                                                  :&nbsp;<span style="font-style: italic;"></span> </span>
+                                      
+                                                          </div>   
+                                                            
+                                                          <div  class="row alert" style="color:#337ab7;text-decoration:none; font-size:18px;padding:3px;margin-left: 5px;margin-right: 5px;margin-top: -50px!important;">
+                                                           <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                                                          <div class="pull-right" ><a href="home.do"><i class="fa fa-home" aria-hidden="true"></i></a></div>
+                                                           </div>
+                                                          </div>
+                                                      <div class="row" >
+                                                           <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">     
+                                                             <!DOCTYPE html>
+                                      
+                                      
+                                      
+                                      
+                                      
+                                         
+                                      <html lang="en">
+                                      <head>
+                                      <title> ::OAMDC:: </title>  
+                                      
+                                      <script type="text/javascript">
+                                           
+                                      
+                                          if (top != self) 
+                                          {
+                                              top.location.replace(location.href);
+                                          }
+                                      
+                                          // To disable Right click Function
+                                      
+                                          var message = "This function is not allowed here.";
+                                          function clickIE4() 
+                                          {
+                                      
+                                              if (event.button == 2) 
+                                              {
+                                                  alert(message);
+                                                  return dist_codefalse;
+                                              }
+                                          }
+                                      
+                                          function clickNS4(e) 
+                                          {
+                                              if (document.layers || document.getElementById && !document.all) 
+                                              {
+                                                  if (e.which == 2 || e.which == 3) 
+                                                  {
+                                                      alert(message);
+                                                      return false;
+                                                  }
+                                              }
+                                          }
+                                      
+                                          if (document.layers) 
+                                          {
+                                              document.captureEvents(Event.MOUSEDOWN);
+                                              document.onmousedown = clickNS4;
+                                          }
+                                      
+                                          else if (document.all && !document.getElementById) 
+                                          {
+                                              document.onmousedown = clickIE4;
+                                          }
+                                      
+                                          document.oncontextmenu = new Function("alert(message);return false;");
+                                      </script>
+                                       
+                                      <script type="text/javascript" src="https://oamdc.ap.gov.in:443/js/common-validations.js?version=0.04513677209508282"></script>
+                                      <script type="text/javascript" src="https://oamdc.ap.gov.in:443/js/JSFilter.js"></script>
+                                      <script src="js/jquery-1.12.4.min.js"></script>
+                                       <script src="js/bootstrap.min.js"></script>
+                                      <link href="css/font-awesome.min.css" rel="stylesheet">
+                                      <link rel="stylesheet" href="css/animate.min.css">
+                                      <link href="css/bootstrap.min.css" rel="stylesheet">
+                                      <link href="css/siteLayout.css?version=0.8371440210734563" rel="stylesheet">
+                                      <link rel="stylesheet" href="css/blue.css?version=0.926321704057705">
+                                           
+                                      
+                                           
+                                      
+                                      
+                                      <script type="text/javascript" src="https://oamdc.ap.gov.in:443/js/common-validations.js?version=0.9915470169010008"></script>
+                                      <script type="text/javascript" src="https://oamdc.ap.gov.in:443/js/JSFilter.js"></script>
+                                      <script src="js/jquery-1.12.4.min.js"></script>
+                                       <script src="js/bootstrap.min.js"></script>
+                                      <link href="css/font-awesome.min.css" rel="stylesheet">
+                                      <link rel="stylesheet" href="css/animate.min.css">
+                                      <link href="css/bootstrap.min.css" rel="stylesheet">
+                                      <link href="css/siteLayout.css?version=0.4484832263932852" rel="stylesheet">
+                                      <link rel="stylesheet" href="css/blue.css?version=0.18491081356899663">
+                                           
+                                      
+                                      
+                                      <script type="text/javascript">
+                                      
+                                          var back_disable = true;
+                                      
+                                          window.history.forward();
+                                          function noBack() {
+                                              if(back_disable) {
+                                                  window.history.forward();
+                                              }
+                                          }
+                                          
+                                          
+                                      
+                                          window.onkeydown = function(e) {
+                                              if (e.ctrlKey || e.keyCode === 116) {
+                                                  e.keyCode = 0;
+                                                  e.returnValue = false;
+                                                  return false;
+                                              }
+                                          };
+                                      
+                                          if (top != self) {
+                                              top.location.replace(location.href);
+                                          }
+                                      
+                                          // To disable Right click Function
+                                      
+                                          var message = "This function is not allowed here.";
+                                          function clickIE4() {
+                                      
+                                              if (event.button == 2) {
+                                                  alert(message);
+                                                  return dist_codefalse;
+                                              }
+                                          }
+                                      
+                                          function clickNS4(e) {
+                                              if (document.layers || document.getElementById && !document.all) {
+                                                  if (e.which == 2 || e.which == 3) {
+                                                      alert(message);
+                                                      return false;
+                                                  }
+                                              }
+                                          }
+                                      
+                                          if (document.layers) {
+                                              document.captureEvents(Event.MOUSEDOWN);
+                                              document.onmousedown = clickNS4;
+                                          }
+                                      
+                                          else if (document.all && !document.getElementById) {
+                                              document.onmousedown = clickIE4;
+                                          }
+                                      
+                                          document.oncontextmenu = new Function("alert(message);return false;");
+                                      </script>
+                                      
+                                      <style>
+                                      
+                                      .wrapper{
+                                      background:#fff!important;
+                                      }
+                                      
+                                      .list_item11 li{ list-style-type:square!important;}
+                                      </style>
+                                      
+                                      </head>
+                                      <body style="margin-bottom:15px;background-color: white!important;"  onload="noBack()" onpageshow="if (event.persisted) noBack();" onunload="" >
+                                      
+                                              <script type="text/javascript">
+                                      var back_disable = true;
+                                      </script>
+                                      <br><br>
+                                      <div class="container" style="">
+                                          <div class="row">
+                                          
+                                      <!--      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 " style="box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1); min-height:400px;">
+                                       -->          
+                                       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                           
+                                          
+                                              <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                                                 <img src="images/error.JPG" class="img-responsive" style="margin-top:90px;"/>
+                                              
+                                              </div>
+                                              
+                                              
+                                              <div class="col-xs-12 col-sm-12 col-md-10  col-lg-10 col-xl-10 text-left" style="margin-top:50px;">
+                                                 <h1 style="color:#ec3222; font-weight:bold;">Oops...</h1>
+                                                 <h3 style="color:#ec3222;">We can't find the page you're looking for</h3>
+                                                  <h4 style="color:blue;">You are here due to one of the following reasons....</h4>
+                                                 <ul class="list_item11" style="color:#303030; padding:0px; line-height:20px; font-weight:bold; margin-left:15px;"> 
+                                                
+                                                 <li>Your session might have expired </li>
+                                                 <li>You have requested for the unauthorised service</li>
+                                                 <li>May be you have requested the service in unauthorised way</li>
+                                                 
+                                                 </ul>
+                                                 
+                                                 <h1><a href="https://oamdc.ap.gov.in:443/" ><button type="submit" class="btn btn-sm btn-primary" >Click Here to Go To Home Page.</button></a></h1>
+                                              
+                                              </div>
+                                           
+                                         
+                                           </div>
+                                          
+                                            
+                                              
+                                              
+                                              
+                                               
+                                              
+                                              
+                                      </div></div></body>
+                                            
+                                           
+                                      <body  >
+                                        
+                                      
+                                       <div id="fsCycler"></div>
+                                          <!-- onload="noBack()" onpageshow="if (event.persisted) noBack();" onunload="" -->
+                                          <div id="wrapper" >
+                                              <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                                                  <div class="container-fluid">
+                                                      <div class="navbar-header">
+                                                          <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                                          <span class="sr-only">Toggle navigation</span>
+                                                          <span class="icon-bar"></span>  
+                                                          <span class="icon-bar"></span>
+                                                          <span class="icon-bar"></span>
+                                                      </button> -->
+                                                          <div class="navbar-brand">
+                                                              <a id="menu-toggle" href="#" class=" btn-menu toggle"> <i
+                                                                  class="fa fa-bars"></i> </a> <!-- <img src="images/header.png"
+                                                                  class="pull-left" style="margin-top:-5px;" height="35" width="35" /> -->
+                                                                  
+                                                                  <a href="./" class="pull-left" style="padding-right:15px;"><i class="fa fa-home" style="color:#fff; "></i></a>
+                                                              <a class="navbar-brand" href="#"
+                                                                  style="margin-top:-16px;color: #ffffff;"> <!-- <img style="width:180px;" src="img/logo.png" alt="logo" style="padding-right:0px;" > --> OAMDC</a>
+                                                          </div>
+                                                      </div>
+                                                      <!-- <div id="navbar" class="collapse navbar-collapse">
+                                                      <ul class="nav navbar-nav">
+                                                          <li class="active"><a href="#">Home</a></li>
+                                                          <li><a href="#">Home</a></li>
+                                                          <li><a href="#about">About</a></li>
+                                                      </ul>
+                                                  </div>/.nav-collapse -->  
+                                      
+                                                      <ul class="nav navbar-nav navbar-right visible-lg visible-md">
+                                                          <li> <a onclick="return getUserDetails();">  
+                                                            <span id="loading_login"></span> 
+                                                             <!-- onclick="return getUserDetails();" -->   
+                                                          <span style="font-size:15px;border-radius:0px;margin-bottom: -5px;cursor: pointer;"  >
+                                                                      Welcome:&nbsp;<span style="font-style: italic;">
+                                                                            <div id="txt"></div>
+                                                                  
+                                                                       
+                                                                   </span> </span>  </a> 
+                                                          </li>
+                                                            <li class="">
+                                                           
+                                                            <a href="login.do"style=" background: #fe6b1d;  ">Login</a>
+                                                            
+                                                            </li>
+                                                      </ul>  
+                                                  </div>
+                                              </nav>
+                                               
+                                      
+                                               
+                                              <!-- Page content -->
+                                      
+                                               
+                                      </div>
+                                          
+                                           
+                                            
+                                      
+                                      </body>
+                                       
+                                        
+                                      </html>
+                                      
+                                         
+                                                           </div>
+                                                          <!--  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">
+                                                           &nbsp;
+                                                           </div> -->  
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                          
+                                          <script>
+                                              /*Menu-toggle*/
+                                      
+                                              $("#menu-toggle").click(function(e) {
+                                                  e.preventDefault();
+                                                  $("#wrapper").toggleClass("active");
+                                      
+                                              });
+                                              /*for place holders*/
+                                              $(document).ready(function() {
+                                      
+                                                  $('input[type=text]').each(function() {
+                                                      $(this).attr("placeholder", $(this).attr("title"));
+                                                  });
+                                      
+                                              });
+                                          </script>
+                                           
+                                          
+                                          
+                                          
+                                          
+                                            <div class="modal fade" id="cfss_modal" role="dialog">
+                                          <div class="modal-dialog" id="modal-dialog">
+                                          
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                              <div class="modal-header" style="background-color: #2874f0;color:white;">
+                                                <button type="button" class="close" data-dismiss="modal" style="opacity:1;font-size:25px;color:white!important;">&times;</button>
+                                         <!--  <img style="width:190px;" src="img/logo.png" alt="logo" style="padding-right:0px;" >   -->
+                                         OAMDC
+                                              </div>  
+                                              <div class="modal-body" style="background-image: none!important;">
+                                                           <div  id="cfss_modal_body">  
+                                      
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <p class="pull-left" style="color:black;">Designed &amp; Developed by           
+                                                 <a href="http://apcfss.in" target="_blank">APCFSS</a>
+                                                  </p>
+                                               
+                                                <button type="button" class="btn btn-default pull-right" data-dismiss="modal" style="background-color:#2874f0;color:white;">Close</button>
+                                              </div>
+                                            </div>  
+                                            
+                                          </div>                 
+                                        </div>
+                                            </div>
+                                      
+                                      </body>
+                                        
+                                      </html>
+								 

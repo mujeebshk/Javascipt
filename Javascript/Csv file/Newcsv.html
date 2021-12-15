@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+
+body {
+          font: 12px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+          color: #404040;
+          background: #47496D;
+          background-image: -webkit-radial-gradient(center, circle cover, #6b6e8c, #212649);
+          background-image: -moz-radial-gradient(center, circle cover, #6b6e8c, #212649);
+          background-image: -o-radial-gradient(center, circle cover, #6b6e8c, #212649);
+          background-image: radial-gradient(center, circle cover, #6b6e8c, #212649);
+        }
+        #wrap{
+          margin: 80px auto;
+          width: 960px;
+          padding: 10px;
+          overflow: hidden;
+          background: #FAFAFA;
+          border-radius: 4px;
+          -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+        }
+        form{
+          background: #CCC;
+          border-radius: 2px;
+          padding: 10px;
+        }
+        table {
+          max-width: 100%;
+          background-color: #fff;
+          border-collapse: collapse;
+          border-spacing: 0;
+          width: 100%;
+          margin-bottom: 20px;
+        }
+        table th{
+          background: #eae4ff;
+        }
+        table th,
+        table td {
+          padding: 8px;
+          line-height: 20px;
+          text-align: left;
+          vertical-align: top;
+          border-top: 1px solid #dddddd;
+        }
+        table {
+          border: 1px solid #dddddd;
+          border-collapse: separate;
+          *border-collapse: collapse;
+          border-left: 0;
+          -webkit-border-radius: 4px;
+             -moz-border-radius: 4px;
+                  border-radius: 4px;
+        }
+        table th,
+        table td {
+          border-left: 1px solid #dddddd;
+        }
+    
+        table tr:nth-child(odd){
+          background-color: #f9f9f9;
+        }
+    
+        table tr:hover td
+        {
+          background-color: #f5f5f5;
+        }
+    
+        table tr:first-child{
+          font-weight: bold;
+        }
+         /* table {
+  border-collapse: collapse;
+  border-radius: 5px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  font-family: "Quicksand", sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+th {
+  background: #009578;
+  color: #ffffff;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 10px 20px;
+}
+
+tr:nth-child(even) {
+  background: #eeeeee;
+} */
+    </style>
+</head>
+<body>
+
+    <div id="wrap">
+        <h1>HTML5 and Javascript CSV Parser</h1>
+        <form action="javascript:void(0);" id="the_form">
+          <input type="file" id="csvFileInput" style="padding-bottom: 15px">
+         <!--  <input type = "text" id="search" onkeyup="searchFun()" placeholder ="Search By Name"/>  -->
+          <!-- <input type="submit" value="Go" class="btn"/> -->
+        </form>
+        <div id="file_info"></div>
+        <div id="list">
+    <table id="csvRoot"></table>
+        </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.2.0/papaparse.min.js"></script>
+    <script type="text/javascript">
+
+        function fileInfo (e){
+              let file = e.target.files[0];
+              if(file.name.split(".")[1].toUpperCase() !="CSV") {
+                  alert('Invalid csv file!');
+                  e.target.parentNode.reset();
+                  return;
+              } else {
+                  document.getElementById('file_info').innerHTML = "<p>File Name: "+file.name + " | "+file.size+" Bytes.</p>"
+              }
+          }
+        class TableCsv {
+  /**
+   * @param {HTMLTableElement} root The table element which will display the CSV data.
+   */
+  constructor(root) {
+    this.root = root;
+  }
+
+  /**
+   * Clears existing data in the table and replaces it with new data.
+   *
+   * @param {string[][]} data A 2D array of data to be used as the table body
+   * @param {string[]} headerColumns List of headings to be used
+   */
+  update(data, headerColumns = []) {
+    this.clear();
+    this.setHeader(headerColumns);
+    this.setBody(data);
+  }
+
+  /**
+   * Clears all contents of the table (incl. the header).
+   */
+  clear() {
+    this.root.innerHTML = "";
+  }
+
+  /**
+   * Sets the table header.
+   *
+   * @param {string[]} headerColumns List of headings to be used
+   */
+  setHeader(headerColumns) {
+    this.root.insertAdjacentHTML(
+      "afterbegin",
+      `
+            <thead>
+                <tr>
+                    ${headerColumns.map((text) => `<th>${text}</th>`).join("")}
+                </tr>
+            </thead>
+        `
+    );
+  }
+
+  /**
+   * Sets the table body.
+   *
+   * @param {string[][]} data A 2D array of data to be used as the table body
+   */
+  setBody(data) {
+    const rowsHtml = data.map((row) => {
+      return `
+                <tr>
+                    ${row.map((text) => `<td>${text}</td>`).join("")}
+                </tr>
+            `;
+    });
+
+    this.root.insertAdjacentHTML(
+      "beforeend",
+      `
+            <tbody>
+                ${rowsHtml.join("")}
+            </tbody>
+        `
+    );
+  }
+}
+
+const tableRoot = document.querySelector("#csvRoot");
+const csvFileInput = document.querySelector("#csvFileInput");
+const tableCsv = new TableCsv(tableRoot);
+
+csvFileInput.addEventListener("change", (e) => {
+  Papa.parse(csvFileInput.files[0], {
+    delimiter: ",",
+    skipEmptyLines: true,
+    complete: (results) => {
+      tableCsv.update(results.data.slice(1), results.data[0]);
+    }
+  });
+});
+    </script>
+</body>
+</html>
