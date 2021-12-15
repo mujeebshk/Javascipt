@@ -1,221 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CSV FileReader</title>
-    <!-- <style type="text/css">
-        body {
-          font: 12px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
-          color: #404040;
-          background: #47496D;
-          background-image: -webkit-radial-gradient(center, circle cover, #6b6e8c, #212649);
-          background-image: -moz-radial-gradient(center, circle cover, #6b6e8c, #212649);
-          background-image: -o-radial-gradient(center, circle cover, #6b6e8c, #212649);
-          background-image: radial-gradient(center, circle cover, #6b6e8c, #212649);
-        }
-        #wrap{
-          margin: 80px auto;
-          width: 960px;
-          padding: 10px;
-          overflow: hidden;
-          background: #FAFAFA;
-          border-radius: 4px;
-          -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-        }
-        form{
-          background: #CCC;
-          border-radius: 2px;
-          padding: 10px;
-        }
-        table {
-          max-width: 100%;
-          background-color: #fff;
-          border-collapse: collapse;
-          border-spacing: 0;
-          width: 100%;
-          margin-bottom: 20px;
-        }
-        table th{
-          background: #eae4ff;
-        }
-        table th,
-        table td {
-          padding: 8px;
-          line-height: 20px;
-          text-align: left;
-          vertical-align: top;
-          border-top: 1px solid #dddddd;
-        }
-        table {
-          border: 1px solid #dddddd;
-          border-collapse: separate;
-          *border-collapse: collapse;
-          border-left: 0;
-          -webkit-border-radius: 4px;
-             -moz-border-radius: 4px;
-                  border-radius: 4px;
-        }
-        table th,
-        table td {
-          border-left: 1px solid #dddddd;
-        }
-    
-        table tr:nth-child(odd){
-          background-color: #f9f9f9;
-        }
-    
-        table tr:hover td
-        {
-          background-color: #f5f5f5;
-        }
-    
-        table tr:first-child{
-          font-weight: bold;
-        }
-      </style> -->
-</head>
-<body>
-    <!-- <div id="wrap">
-        <h1>HTML5 and Javascript CSV Parser</h1>
-        <form action="javascript:void(0);" id="the_form">
-          <input type="file" id="the_file" required="required" accept=".csv"/> -->
-          <input type = "text" id="search" onkeyup="searchFun()" placeholder ="Search By Name"/>
+    <style type="text/css">
+      body {
+        font: 12px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+        color: #404040;
+        background: #47496d;
+        /* background-image: -webkit-radial-gradient(
+          center,
+          circle cover,
+          #6b6e8c,
+          #212649
+        );
+        background-image: -moz-radial-gradient(
+          center,
+          circle cover,
+          #6b6e8c,
+          #212649
+        );
+        background-image: (
+          center,
+          circle cover,
+          #6b6e8c,
+          #212649
+        );
+        background-image:(
+          center,
+          circle cover,
+          #6b6e8c,
+          #212649
+        ); */
+      }
+      #wrap {
+        margin: 80px auto;
+        width: 960px;
+        padding: 10px;
+        overflow: hidden;
+        background: #fafafa;
+        border-radius: 4px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+      }
+      form {
+        background: #ccc;
+        border-radius: 2px;
+        padding: 10px;
+      }
+      table {
+        max-width: 100%;
+        background-color: #fff;
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      table th {
+        background: #eae4ff;
+      }
+      table th,
+      table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: top;
+        border-top: 1px solid #dddddd;
+      }
+      table {
+        border: 1px solid #dddddd;
+        border-collapse: separate;
+        *border-collapse: collapse;
+        border-left: 0;
+        border-radius: 4px;
+      }
+      table th,
+      table td {
+        border-left: 1px solid #dddddd;
+      }
 
-          <table id="mytable">
-            <tr class="header">
-              <th>"NAME"</th>
-              <th>"SEX"</th>
-              <th>"AGE"</th>
-              <th>"HEIGHT (in)"</th>
-              <th>WEIGHT (lbs)</th>
-            </tr>
-            <tr>
-              <td>Tony</td>
-              <td>M</td>
-              <td>23</td>
-              <td>68</td>
-              <td>150</td>
-            </tr>
-            <tr>
-              <td>Riby</td>
-              <td>F</td>
-              <td>25</td>
-              <td>65</td>
-              <td>155</td>
-            </tr>
-            <tr>
-              <td>Alen</td>
-              <td>M</td>
-              <td>28</td>
-              <td>68</td>
-              <td>160</td>
-            </tr>
-            <tr>
-              <td>Mario</td>
-              <td>F</td>
-              <td>22</td>
-              <td>72</td>
-              <td>154</td>
-            </tr>
-            <tr>
-              <td>Zayn</td>
-              <td>M</td>
-              <td>25</td>
-              <td>86</td>
-              <td>156</td>
-            </tr>
-            <tr>
-              <td>Rio</td>
-              <td>M</td>
-              <td>34</td>
-              <td>90</td>
-              <td>170</td>
-            </tr>
-          </table>
+      table tr:nth-child(odd) {
+        background-color: #f9f9f9;
+      }
 
-          <!-- <input type="submit" value="Go" class="btn"/>
-        </form>
-        <div id="file_info"></div>
-        <div id="list"></div>
-      </div>
-      <script src="https://cdn.jsdelivr.net/npm/papaparse@5.2.0/papaparse.min.js"></script> -->
-      <script>
-          // function fileInfo (e){
-          //     let file = e.target.files[0];
-          //     if(file.name.split(".")[1].toUpperCase() !="CSV") {
-          //         alert('Invalid csv file!');
-          //         e.target.parentNode.reset();
-          //         return;
-          //     } else {
-          //         document.getElementById('file_info').innerHTML = "<p>File Name: "+file.name + " | "+file.size+" Bytes.</p>"
-          //     }
-          // }
+      table tr:hover td {
+        background-color: #f5f5f5;
+      }
 
-          const searchFun = () => {
-            let filter = document.getElementById('search').value.toUpperCase();
+      table tr:first-child {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <h1>HTML5 and Javascript CSV Parser</h1>
+      <form action="javascript:void(0);" id="the_form">
+        <!-- <input type="file" id="the_file" required="required" accept=".csv" /> -->
+        <input
+          type="text"
+          id="search"
+          onkeyup="searchFun()"
+          placeholder="Search By Name"
+        />
+      </form>
 
-            let mytable = document.getElementById('mytable');
-            let tr = mytable.getElementsByTagName('tr');
+      <table id="mytable">
+        <tr class="header">
+          <th>"NAME"</th>
+          <th>"SEX"</th>
+          <th>"AGE"</th>
+          <th>"HEIGHT (in)"</th>
+          <th>WEIGHT (lbs)</th>
+        </tr>
+        <tr>
+          <td>Tony</td>
+          <td>M</td>
+          <td>23</td>
+          <td>68</td>
+          <td>150</td>
+        </tr>
+        <tr>
+          <td>Riby</td>
+          <td>F</td>
+          <td>25</td>
+          <td>65</td>
+          <td>155</td>
+        </tr>
+        <tr>
+          <td>Alen</td>
+          <td>M</td>
+          <td>28</td>
+          <td>68</td>
+          <td>160</td>
+        </tr>
+        <tr>
+          <td>Mario</td>
+          <td>F</td>
+          <td>22</td>
+          <td>72</td>
+          <td>154</td>
+        </tr>
+        <tr>
+          <td>Zayn</td>
+          <td>M</td>
+          <td>25</td>
+          <td>86</td>
+          <td>156</td>
+        </tr>
+        <tr>
+          <td>Rio</td>
+          <td>M</td>
+          <td>34</td>
+          <td>90</td>
+          <td>170</td>
+        </tr>
+      </table>
 
-            for (let i = 0; i < tr.length; i++ ) {
-              let td = tr[i].getElementsByTagName('td')[0];
+      <!-- <input type="submit" value="Go" class="btn"/> -->
+      <div id="file_info"></div>
+      <div id="list"></div>
+    </div>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/papaparse@5.2.0/papaparse.min.js"></script> -->
+    <script>
+      // function fileInfo (e){
+      //     let file = e.target.files[0];
+      //     if(file.name.split(".")[1].toUpperCase() !="CSV") {
+      //         alert('Invalid csv file!');
+      //         e.target.parentNode.reset();
+      //         return;
+      //     } else {
+      //         document.getElementById('file_info').innerHTML = "<p>File Name: "+file.name + " | "+file.size+" Bytes.</p>"
+      //     }
+      // }
 
-              if (td) {
-                let textvalue = td.textContent || td.innerHTML;
-                if (textvalue.toUpperCase().indexOf(filter) > -1) {
-                  tr[i].style.display = "";
-                } else {
-                  tr[i].style.display = "none";
-                }
-              }
+      const searchFun = () => {
+        let filter = document.getElementById("search").value.toUpperCase();
+
+        let mytable = document.getElementById("mytable");
+        let tr = mytable.getElementsByTagName("tr");
+
+        for (let i = 0; i < tr.length; i++) {
+          let td = tr[i].getElementsByTagName("td")[0];
+
+          if (td) {
+            let textvalue = td.textContent || td.innerHTML;
+            if (textvalue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
             }
-           }
+          }
+        }
+      };
 
+      // function handleFileSelect (){
+      //     let file = document.getElementById("the_file").files[0];
+      //     let reader = new FileReader();
+      //     let link_reg = /(http:\/\/|https:\/\/)/i;
+      //     reader.onload = function(file) {
+      //         let content = file.target.result;
+      //         let rows = file.target.result.split(/[\r\n|\n]+/);
+      //         let table = document.createElement('table');
 
-          // function handleFileSelect (){
-          //     let file = document.getElementById("the_file").files[0];
-          //     let reader = new FileReader();
-          //     let link_reg = /(http:\/\/|https:\/\/)/i;
-          //     reader.onload = function(file) {
-          //         let content = file.target.result;
-          //         let rows = file.target.result.split(/[\r\n|\n]+/);
-          //         let table = document.createElement('table');
+      //         let output = "";
 
-          //         let output = "";
+      //         for(let i = 0; i < rows.length; i++){
+      //             let tr = document.createElement('tr');
+      //             let arr = rows[i].split(',');
 
-          //         for(let i = 0; i < rows.length; i++){
-          //             let tr = document.createElement('tr');
-          //             let arr = rows[i].split(',');
-
-          //             for (let j = 0; j < arr.length; j++) {
-          //                 if (i==0){
-          //                     var td = document.createElement('th');
-          //                 } else {
-          //                     var td = document.createElement('td');
-          //                 }
-          //                 if( link_reg.test(arr[j])){
-          //                     let a = document.createElement('a');
-          //                     a.href = arr[j];
-          //                     a.innerHTML = arr[j];
-          //                     td.appendChild(a);
-          //                 } else {
-          //                     td.innerHTML = arr[j];
-          //                 }
-          //                 tr.appendChild(td);
-          //             }
-          //             table.appendChild(tr);
-          //           }
-          //           document.getElementById('list').appendChild(table);
-          //     }
-          //     reader.readAsText(file);
-          // }
-          // document.getElementById('the_form').addEventListener('submit', handleFileSelect, false);
-          // document.getElementById('the_file').addEventListener('change', fileInfo, false);
-
-      </script>
-</body>
+      //             for (let j = 0; j < arr.length; j++) {
+      //                 if (i==0){
+      //                     var td = document.createElement('th');
+      //                 } else {
+      //                     var td = document.createElement('td');
+      //                 }
+      //                 if( link_reg.test(arr[j])){
+      //                     let a = document.createElement('a');
+      //                     a.href = arr[j];
+      //                     a.innerHTML = arr[j];
+      //                     td.appendChild(a);
+      //                 } else {
+      //                     td.innerHTML = arr[j];
+      //                 }
+      //                 tr.appendChild(td);
+      //             }
+      //             table.appendChild(tr);
+      //           }
+      //           document.getElementById('list').appendChild(table);
+      //     }
+      //     reader.readAsText(file);
+      // }
+      // document.getElementById('the_form').addEventListener('submit', handleFileSelect, false);
+      // document.getElementById('the_file').addEventListener('change', fileInfo, false);
+    </script>
+  </body>
 </html>
-
