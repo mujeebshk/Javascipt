@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Research</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Nunito+Sans:wght@300&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 62.5%;
+      }
+
+      body {
+        font-size: 1.6rem;
+        font-family: "Nunito Sans", sans-serif;
+        background-color: #0d0c1d;
+        color: #f8f4f9;
+      }
+
+      .container {
+        max-width: 120rem;
+        margin: 0 auto;
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      .searchbar-label {
+        display: block;
+        margin: 10rem 0 2.5rem;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 0.8rem 0.5rem;
+        background-color: #0d0c1d;
+        border: none;
+        outline: 2px solid #7c2af1;
+        color: #f8f4f9;
+      }
+
+      input[type="text"]:focus {
+        border: none;
+        outline-color: #f3414e;
+      }
+
+      .searchbar {
+        max-width: 25rem;
+        margin-bottom: 5rem;
+      }
+
+      .search-results {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: left;
+      }
+
+      .search-results-item {
+        background-color: #151630;
+        padding: 1rem;
+        border-radius: 0.8rem;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      .search-item {
+        display: block;
+        margin-bottom: 1rem;
+      }
+
+      .search-item:last-child {
+        margin-bottom: 0;
+      }
+
+      /* width */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: #151630;
+      }
+
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #7c2af1;
+        border-radius: 0.8rem;
+      }
+
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .title {
+        font-family: "Kaushan Script", cursive;
+        font-size: 10rem;
+        margin: 4rem 0 2.5rem;
+      }
+
+      @media screen and (min-width: 2000px) {
+        html {
+          font-size: 92.5%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Abdul Mujeeb</h1>
+      <input
+        id="search"
+        class="searchbar"
+        type="text"
+        placeholder="What are you looking for?"
+      />
+      <div class="search-results"></div>
+      <div id="match-list"></div>
+    </div>
+    <script>
+      const search = document.getElementById("search");
+      const matchList = document.getElementById("match-list");
+
+      // search states json and filter it
+
+      const searchStates = async (searchText) => {
+        const res = await fetch("./testing.json");
+        const states = await res.json();
+
+        // Get matches to current text input
+        let matches = states.filter((state) => {
+          const regex = new RegExp(`^${searchText}`, "gi");
+          return state.name.match(regex) || state.code.match(regex);
+        });
+
+        if (searchText.length === 0) {
+          matches = [];
+          matchList.innerHTML = "";
+        }
+        outputHtml(matches);
+      };
+
+      // show results in HTML
+      const outputHtml = (matches) => {
+        if (matches.length > 0) {
+          const html = matches
+            .map(
+              (match) => `
+              <div class = "search-results-item">
+                <span class ="search-item">${match.name}</span>
+                <span class ="search-item">${match.code}</span>
+
+                </div>
+              `
+            )
+            .join("");
+          matchList.innerHTML = html;
+        }
+      };
+
+      search.addEventListener("input", () => searchStates(search.value));
+    </script>
+  </body>
+</html>
